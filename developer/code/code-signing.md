@@ -78,11 +78,59 @@ sub   4096R/69B0EA85 2013-03-13
 ## Upload the Key
 
 For others to find the public key, please upload it to a server.
+Currently, [these](https://github.com/marmarek/signature-checker/blob/master/check-git-signature#L133-L135) are the recognized servers.
+In the example below, we will use `keys.openpgp.org`.
 
+First, find the key ID, which can be located in the output above,
+near `sub` and after the first slash, which in this case is `69B0EA85`.
+
+Then, run:
+
+```shell_session
+$ gpg --send-keys --keyserver keys.openpgp.org <KEYID>
+gpg: sending key <KEYID> to hkp://keys.openpgp.org
 ```
-$ gpg --send-keys --keyserver pool.sks-keyservers.net 69B0EA85
-gpg: sending key 488BA441 to hkp server pool.sks-keyservers.net
+
+If you decide to upload to `keys.openpgp.org`, you will later
+get an email from them (which may appear in your junk folder)
+sent to your address that you specified in the PGP key above.
+The email looks like this:
+
+~~~
+Hi,
+
+This is an automated message from keys.openpgp.org. If you didn't upload your key there, please ignore this message.
+
+OpenPGP key: <KEYID>
+
+This key was just uploaded for the first time, and is now published without identity information. If you want to allow others to find this key by e-mail address, please follow this link:
+
+https://keys.openpgp.org/upload/<link>
+~~~
+
+Open the link in a web browser and you will see an upload page.
+
+If you see "session expired", run the following command:
+
+```shell_session
+$ gpg --armor --export <KEYID> > pubkey.asc
 ```
+
+Then upload `pubkey.asc` to that page. You will then receive another email like this:
+
+~~~
+Hi,
+
+This is an automated message from keys.openpgp.org. If you didn't request this message, please ignore it.
+
+OpenPGP key: <KEYID>
+
+To let others find this key from your email address "<email>", please click the link below:
+
+https://keys.openpgp.org/verify/<link>
+~~~
+
+Open the link in a web browser. The keyserver will now recognize the key with this email address.
 
 ## Using PGP with Git
 
